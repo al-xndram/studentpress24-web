@@ -33,13 +33,11 @@ let blue_book = (function () {
   parent.appendChild(image_viewer);
 
   parent.onmouseenter = () => {
-    parent.style.border = "1px solid red";
-    parent.style.zIndex = 100;
+    highlight_book(parent);
     selected = true;
   };
   parent.onmouseleave = () => {
-    parent.style.border = "none";
-    parent.style.zIndex = 0;
+    unhighlight_book(parent);
     selected = false;
   };
 
@@ -58,6 +56,16 @@ let blue_book = (function () {
     selected: () => selected,
   };
 })();
+
+function highlight_book(parent) {
+  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.2)";
+  parent.style.zIndex = 100;
+}
+
+function unhighlight_book(parent) {
+  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.02)";
+  parent.style.zIndex = 0;
+}
 
 let green_book = (function () {
   // create parent element
@@ -79,13 +87,11 @@ let green_book = (function () {
   parent.appendChild(image_viewer);
 
   parent.onmouseenter = () => {
-    parent.style.border = "1px solid red";
-    parent.style.zIndex = 100;
+    highlight_book(parent);
     selected = true;
   };
   parent.onmouseleave = () => {
-    parent.style.border = "none";
-    parent.style.zIndex = 0;
+    unhighlight_book(parent);
     selected = false;
   };
 
