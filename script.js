@@ -67,6 +67,14 @@ function unhighlight_book(parent) {
   parent.style.zIndex = 0;
 }
 
+function make_big(elem) {
+  elem.style.height = "95vh";
+}
+
+function make_small(elem, num) {
+  elem.style.height = num + "vh";
+}
+
 let green_book = (function () {
   // create parent element
   let parent = document.createElement("div");
