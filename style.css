@@ -1,154 +1,197 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: beige;
-    color: mediumblue;
+@font-face {
+  font-family: "Laica";
+  src: url("./laica.ttf") format("truetype");
 }
 
-.container{
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    overflow: hidden;
+* {
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: mediumblue;
+  transition: all 0.1s;
+}
 
+section {
+  background-color: beige;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  overflow: hidden;
 }
 
 .info-main {
-    height: 100vh;
-    padding: 2vw;
-    /* display: flex;
+  height: 100vh;
+  padding: 2vw;
+  /* display: flex;
     justify-content: center; */
 }
 
 .epilogue-main {
-    height: 100vh;
-    padding: 2vw;
-    overflow: scroll;
+  height: 100vh;
+  padding: 2vw;
+  overflow: scroll;
 }
-
 
 /* general functions */
 
 ::selection {
-    background-color: darkgreen;
-    color: white;
+  background-color: darkgreen;
+  color: white;
 }
 
 .links {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .links:hover {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
-
-
 
 /* info section (main page) */
 
 #title {
-    font-size: 80pt;
+  font-family: "Laica";
+  font-size: 40pt;
 }
 
 #colophon {
-    font-size: 10pt;
-    width: 90%;
-    padding-right: 10pt;
+  font-size: 10pt;
+  width: 90%;
+  padding-right: 10pt;
+  background-color: beige;
 }
 
 #TOC {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 50% 50%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
 }
 
 .TOC-section {
-    text-align: center;
-    padding: 20pt;
-    font-size: 36pt;
+  text-align: center;
+  padding: 20pt;
+  font-size: 36pt;
+}
+
+.TOC-section:hover ul {
+  opacity: 1;
+}
+
+ul {
+  opacity: 0;
+}
+
+li:hover {
+  text-decoration: line-through;
+}
+
+#cute-details {
+  background-color: beige;
 }
 
 li {
-    list-style-type:none;
-    font-size: 10pt;
-    line-height: 12pt;
+  list-style-type: none;
+  font-size: 10pt;
+  line-height: 12pt;
 }
 
 .icon {
-    padding-bottom: 10pt;
-    font-size: 60pt;
+  padding-bottom: 10pt;
+  font-size: 60pt;
 }
-
-
 
 /* epilogue section (main page) */
 
 #epilogue-title-main {
-    font-size: 20pt;
+  font-size: 20pt;
 }
 
-
 #credits-main {
-    padding-top: 30pt;
-    padding-bottom: 5pt;
-    font-size: 10pt;
-    font-style: italic;
+  padding-top: 30pt;
+  padding-bottom: 5pt;
+  font-size: 10pt;
+  font-style: italic;
 }
 
 #essay-main-page p {
-    font-size: 10pt;
-    margin-top: 11pt;
+  font-size: 10pt;
+  margin-top: 11pt;
 }
 
 #ingold-main {
-    font-style: italic;
-    text-align: center;
-    padding-left: 30pt;
-    padding-right: 20pt;
+  font-style: italic;
+  text-align: center;
+  padding-left: 30pt;
+  padding-right: 20pt;
 }
-
-
-
-
 
 /* epilogue page */
 
 .epilogue-page {
-    padding-top: 5%;
-    padding-left: 20%;
-    padding-right: 20%;
-    padding-bottom: 5%;
+  padding-top: 5%;
+  padding-left: 20%;
+  padding-right: 20%;
+  padding-bottom: 5%;
 }
 
 #epilogue-title {
-    font-size: 36pt;
-    text-align: center;
+  font-size: 36pt;
+  text-align: center;
 }
 
-
 #essay-epilogue-page p {
-    font-size: 16pt;
-    margin-top: 25pt;
+  font-size: 16pt;
+  margin-top: 25pt;
 }
 
 #ingold-epilogue {
-    font-style: italic;
-    text-align: center;
-    padding: 15pt;
+  font-style: italic;
+  text-align: center;
+  padding: 15pt;
 }
 
 .essay-parts {
-    font-size: 11pt;
-    text-align: center;
-    padding: 2%;
-    padding-top: 7%;
+  font-size: 11pt;
+  text-align: center;
+  padding: 2%;
+  padding-top: 7%;
 }
 
 #credits-epilogue {
-    padding: 10%;
-    text-align: right;
-    font-style: italic;
-    font-size: 12;
+  padding: 10%;
+  text-align: right;
+  font-style: italic;
+  font-size: 12;
+}
+
+/* draggable element */
+
+.fixed-element {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  padding: 20px 0;
+}
+
+.fixed-element:hover .corner {
+  opacity: 0.8;
+}
+
+#image-viewer {
+  width: 100%;
+  height: 100%;
+}
+
+#image-viewer img {
+  height: 100%;
+}
+
+.corner {
+  opacity: 0;
+  z-index: 992;
 }
