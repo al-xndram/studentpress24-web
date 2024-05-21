@@ -78,6 +78,18 @@ section {
   font-size: 36pt;
 }
 
+.TOC-section:hover ul {
+  opacity: 1;
+}
+
+ul {
+  opacity: 0;
+}
+
+li:hover {
+  text-decoration: line-through;
+}
+
 #cute-details {
   background-color: beige;
 }

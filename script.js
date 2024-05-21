@@ -59,10 +59,10 @@ function create_book(dimensions, folder, num_pages) {
   document.body.appendChild(parent);
 
   book_manager.pages.forEach((img) => {
-    console.log(img);
     image_viewer.appendChild(img);
     img.style.display = "none";
   });
+
   set_image(0, book_manager.pages);
 
   let is_rotated = () => ((dimensions.r / 180) % 2 === 0 ? true : false);
@@ -73,6 +73,7 @@ function create_book(dimensions, folder, num_pages) {
     prev_page: () =>
       is_rotated() ? prev_page(book_manager) : next_page(book_manager),
     selected: () => selected,
+    set_page: (page) => go_to_page(book_manager, page),
   };
 }
 
@@ -113,6 +114,11 @@ function prev_page(book) {
     book.cur = book.pages.length - 1;
   }
 
+  set_image(book.cur, book.pages);
+}
+
+function go_to_page(book, page) {
+  book.cur = page;
   set_image(book.cur, book.pages);
 }
 
