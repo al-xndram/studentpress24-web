@@ -175,7 +175,7 @@ li {
   position: fixed;
   top: 0px;
   left: 0px;
-  padding: 20px 0;
+  padding: 30px 0;
 }
 
 .fixed-element:hover .corner {
@@ -193,5 +193,5 @@ li {
 
 .corner {
   opacity: 0;
-  z-index: 992;
+  z-index: 999281;
 }

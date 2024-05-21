@@ -11,6 +11,7 @@ document.addEventListener("keydown", function(e) {
 });
 
 let cur_id = 0;
+let z = 0;
 
 let blue_dimensions = {
   h: 60,
@@ -73,30 +74,32 @@ function create_book(dimensions, folder, num_pages) {
     prev_page: () =>
       is_rotated() ? prev_page(book_manager) : next_page(book_manager),
     selected: () => selected,
-    set_page: (page) => go_to_page(book_manager, page),
+    set_page: (page) => {
+      go_to_page(book_manager, page);
+      make_big(parent);
+      highlight_book(image_viewer);
+    },
   };
 }
 
 function highlight_book(parent) {
-  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.2)";
-  parent.parentElement.style.zIndex = 100;
+  z += 1;
+  parent.style.boxShadow = "0 0 80px 10px rgba(0, 0, 0, 0.4)";
+  parent.parentElement.style.zIndex = z;
 }
 
 function unhighlight_book(parent) {
-  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.02)";
-
-  parent.parentElement.style.zIndex = 0;
+  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.2)";
 }
 
 function make_big(elem) {
-  elem.style.transition = "height 0.1s";
   elem.style.height = "100vh";
-  elem.style.transition = "transform 0.1s";
+  elem.style.transition = "all 0.3s";
   elem.style.transform = "translate(10px, 10px)";
 }
 
 function make_small(elem, num) {
-  elem.style.transition = "height 0.1s";
+  elem.style.transition = "height 0.3s";
   elem.style.height = num + "vh";
 }
 
@@ -131,24 +134,53 @@ function add_corners(elem, dimensions) {
     corner_div.style.width = "10px";
     corner_div.style.height = "10px";
     corner_div.style.position = "absolute";
-    corner_div.style.backgroundColor = "red";
 
     //position each of them in absolute position
     if (corner === "top-left") {
       corner_div.style.top = "0px";
       corner_div.style.left = "0px";
 
-      corner_div.onclick = function(e) {
+      let max = document.createElement("span");
+      max.innerText = "⤡";
+
+      max.onclick = function(e) {
         e.stopPropagation();
-        elem.style.height !== dimensions.h + "vh"
-          ? make_small(elem, dimensions.h)
-          : make_big(elem);
+
+        if (max.innerText === "⤡") {
+          make_big(elem);
+          max.innerText = "⤥";
+        } else {
+          make_small(elem, dimensions.h);
+          max.innerText = "⤡";
+        }
       };
+
+      let min = document.createElement("span");
+      min.innerText = "↴";
+
+      min.onclick = function(e) {
+        e.stopPropagation();
+        let h = window.innerHeight;
+
+        if (min.innerText === "↴") {
+          elem.style.transition = "all 0.3s";
+          elem.style.transform = `translate(${dimensions.x}px, ${h - 50}px)`;
+          min.innerText = "↑";
+        } else {
+          elem.style.transition = "all 0.3s";
+          elem.style.transform = `translate(${dimensions.x}px, ${dimensions.y}px)`;
+          min.innerText = "↴";
+        }
+      };
+
+      corner_div.appendChild(max);
+      corner_div.appendChild(min);
     }
 
     if (corner === "top-right") {
       corner_div.style.top = "0px";
       corner_div.style.right = "0px";
+      corner_div.innerText = "⟳";
 
       corner_div.onclick = function(e) {
         e.stopPropagation();
@@ -207,7 +239,7 @@ function update_position(elem, x, y) {
 }
 
 function update_rotation(elem, r) {
-  elem.style.transition = "transform 0.5s";
+  elem.style.transition = "transform 0.3s";
   // let existing_transform = elem.style.transform;
   // let transform = existing_transform.split(" rotate(")[0];
   elem.style.transform = `rotate(${r}deg)`;
