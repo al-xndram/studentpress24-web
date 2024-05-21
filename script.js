@@ -1,4 +1,4 @@
-document.addEventListener("keydown", function (e) {
+document.addEventListener("keydown", function(e) {
   if (e.key === "ArrowRight") {
     if (blue_book.selected()) blue_book.next_page();
     if (green_book.selected()) green_book.next_page();
@@ -13,7 +13,7 @@ document.addEventListener("keydown", function (e) {
 let cur_id = 0;
 let rotation = 0;
 
-let blue_book = (function () {
+let blue_book = (function() {
   // create parent element
   let parent = document.createElement("div");
   parent.id = "blue-book";
@@ -28,7 +28,7 @@ let blue_book = (function () {
   image_viewer.id = "image-viewer";
 
   create_draggable(parent);
-  add_corners(parent);
+  add_corners(father);
 
   parent.appendChild(image_viewer);
 
@@ -41,7 +41,8 @@ let blue_book = (function () {
     selected = false;
   };
 
-  document.body.appendChild(parent);
+  father.appendChild(parent);
+  document.body.appendChild(father);
 
   book_manager.pages.forEach((img) => {
     console.log(img);
@@ -68,14 +69,16 @@ function unhighlight_book(parent) {
 }
 
 function make_big(elem) {
+  elem.style.transition = "height 0.1s";
   elem.style.height = "95vh";
 }
 
 function make_small(elem, num) {
+  elem.style.transition = "height 0.1s";
   elem.style.height = num + "vh";
 }
 
-let green_book = (function () {
+let green_book = (function() {
   // create parent element
   let parent = document.createElement("div");
   parent.id = "blue-book";
@@ -175,21 +178,28 @@ function add_corners(elem) {
     corner_div.style.height = "10px";
     corner_div.style.position = "absolute";
     corner_div.style.backgroundColor = "red";
-    corner_div.onclick = function (e) {
-      e.stopPropagation();
-      rotation += 180;
-      update_rotation(elem, rotation);
-    };
-    //position each of them in absolute position
 
+    //position each of them in absolute position
     if (corner === "top-left") {
       corner_div.style.top = "0px";
       corner_div.style.left = "0px";
+
+      corner_div.onclick = function(e) {
+        e.stopPropagation();
+        if (elem.style.height === "95vh") make_small(elem, 60);
+        else make_big(elem);
+      };
     }
 
     if (corner === "top-right") {
       corner_div.style.top = "0px";
       corner_div.style.right = "0px";
+
+      corner_div.onclick = function(e) {
+        e.stopPropagation();
+        rotation += 180;
+        update_rotation(elem, rotation);
+      };
     }
 
     if (corner === "bottom-left") {
@@ -213,13 +223,13 @@ function create_draggable(draggable_elem) {
   let offsetX = 0;
   let offsetY = 0;
 
-  draggable_elem.addEventListener("pointerdown", function (e) {
+  draggable_elem.addEventListener("pointerdown", function(e) {
     isDragging = true;
     offsetX = e.clientX - draggable_elem.getBoundingClientRect().left;
     offsetY = e.clientY - draggable_elem.getBoundingClientRect().top;
   });
 
-  draggable_elem.addEventListener("pointermove", function (e) {
+  draggable_elem.addEventListener("pointermove", function(e) {
     if (!isDragging) return;
     let x = e.clientX - offsetX;
     let y = e.clientY - offsetY;
@@ -228,11 +238,11 @@ function create_draggable(draggable_elem) {
     update_position(draggable_elem, x, y, r);
   });
 
-  draggable_elem.addEventListener("pointerup", function () {
+  draggable_elem.addEventListener("pointerup", function() {
     isDragging = false;
   });
 
-  draggable_elem.addEventListener("onmouseleave", function () {
+  draggable_elem.addEventListener("onmouseleave", function() {
     isDragging = false;
   });
 }
