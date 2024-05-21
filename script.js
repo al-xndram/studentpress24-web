@@ -43,8 +43,15 @@ function create_book(dimensions, folder, num_pages) {
   let image_viewer = document.createElement("div");
   image_viewer.id = "image-viewer";
 
+  let seeker = {
+    next: () =>
+      is_rotated() ? next_page(book_manager) : prev_page(book_manager),
+    prev: () =>
+      is_rotated() ? prev_page(book_manager) : next_page(book_manager),
+  };
+
   create_draggable(parent);
-  add_corners(parent, dimensions);
+  add_corners(parent, dimensions, seeker);
 
   parent.appendChild(image_viewer);
 
@@ -69,10 +76,8 @@ function create_book(dimensions, folder, num_pages) {
   let is_rotated = () => ((dimensions.r / 180) % 2 === 0 ? true : false);
 
   return {
-    next_page: () =>
-      is_rotated() ? next_page(book_manager) : prev_page(book_manager),
-    prev_page: () =>
-      is_rotated() ? prev_page(book_manager) : next_page(book_manager),
+    next_page: () => seeker.next(),
+    prev_page: () => seeker.prev(),
     selected: () => selected,
     set_page: (page) => {
       go_to_page(book_manager, page);
@@ -137,20 +142,20 @@ function go_to_page(book, page) {
   set_image(book.cur, book.pages);
 }
 
-function add_corners(elem, dimensions) {
+function add_corners(elem, dimensions, seeker) {
   // add 10px divs to each corner of the element
   let corners = ["top-left", "top-right"];
-  corners.forEach((corner) => {
-    let corner_div = document.createElement("div");
-    corner_div.classList.add("corner", corner);
-    corner_div.style.width = "10px";
-    corner_div.style.height = "10px";
-    corner_div.style.position = "absolute";
+  corners.forEach((c) => {
+    let corner = document.createElement("div");
+    corner.classList.add("corner", c);
+    corner.style.width = "10px";
+    corner.style.height = "10px";
+    corner.style.position = "absolute";
 
     //position each of them in absolute position
-    if (corner === "top-left") {
-      corner_div.style.top = "0px";
-      corner_div.style.left = "0px";
+    if (c === "top-left") {
+      corner.style.top = "0px";
+      corner.style.left = "0px";
 
       let max = document.createElement("span");
       max.id = "max-btn";
@@ -183,16 +188,26 @@ function add_corners(elem, dimensions) {
         }
       };
 
-      corner_div.appendChild(max);
-      corner_div.appendChild(min);
+      corner.appendChild(max);
+      corner.appendChild(min);
     }
 
-    if (corner === "top-right") {
-      corner_div.style.top = "0px";
-      corner_div.style.right = "0px";
-      corner_div.innerText = "⟳";
+    if (c === "top-right") {
+      corner.style.top = "0px";
+      corner.style.right = "50px";
 
-      corner_div.onclick = function(e) {
+      let rot_btn = document.createElement("span");
+      rot_btn.innerText = "⟳";
+
+      let next = document.createElement("span");
+      next.innerText = "→";
+      next.onclick = seeker.next;
+
+      let prev = document.createElement("span");
+      prev.innerText = "←";
+      prev.onclick = seeker.prev;
+
+      rot_btn.onclick = function(e) {
         e.stopPropagation();
         dimensions.r += 180;
 
@@ -207,11 +222,15 @@ function add_corners(elem, dimensions) {
 
         update_rotation(el, dimensions.r);
       };
+
+      corner.appendChild(prev);
+      corner.appendChild(next);
+      corner.appendChild(rot_btn);
     }
 
-    corner_div.style.cursor = "pointer";
+    corner.style.cursor = "pointer";
 
-    elem.appendChild(corner_div);
+    elem.appendChild(corner);
   });
 }
 

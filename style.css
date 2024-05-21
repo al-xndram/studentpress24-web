@@ -179,7 +179,7 @@ li {
 }
 
 .fixed-element:hover .corner {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 #image-viewer {
@@ -194,4 +194,8 @@ li {
 .corner {
   opacity: 0;
   z-index: 999281;
+}
+
+.corner span:hover {
+  background-color: white;
 }
