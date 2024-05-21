@@ -163,6 +163,11 @@ li {
   position: fixed;
   top: 0px;
   left: 0px;
+  padding: 20px 0;
+}
+
+.fixed-element:hover .corner {
+  opacity: 0.8;
 }
 
 #image-viewer {
@@ -172,4 +177,9 @@ li {
 
 #image-viewer img {
   height: 100%;
+}
+
+.corner {
+  opacity: 0;
+  z-index: 992;
 }

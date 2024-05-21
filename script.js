@@ -11,98 +11,48 @@ document.addEventListener("keydown", function(e) {
 });
 
 let cur_id = 0;
-let rotation = 0;
 
-let blue_book = (function() {
-  // create parent element
+let blue_dimensions = {
+  h: 60,
+  r: 0,
+  x: 50,
+  y: 50,
+};
+
+let green_dimensions = {
+  h: 80,
+  r: 0,
+  x: 150,
+  y: 100,
+};
+
+let blue_book = create_book(blue_dimensions, "blue", 29);
+let green_book = create_book(green_dimensions, "green", 21);
+
+function create_book(dimensions, folder, num_pages) {
   let parent = document.createElement("div");
-  parent.id = "blue-book";
+  parent.id = folder + "-book";
   parent.classList.add("fixed-element");
-  parent.style.height = "60vh";
+  parent.style.height = dimensions.h + "vh";
+  parent.style.transform = `translate(${dimensions.x}px, ${dimensions.y}px) rotate(0deg)`;
 
-  let book_manager = create_book("blue", 29);
+  let book_manager = create_manager(folder, num_pages);
   let selected = false;
 
-  // image viewer
   let image_viewer = document.createElement("div");
   image_viewer.id = "image-viewer";
 
   create_draggable(parent);
-  add_corners(parent);
+  add_corners(parent, dimensions);
 
   parent.appendChild(image_viewer);
 
   parent.onmouseenter = () => {
-    highlight_book(parent);
+    highlight_book(image_viewer);
     selected = true;
   };
   parent.onmouseleave = () => {
-    unhighlight_book(parent);
-    selected = false;
-  };
-
-  father.appendChild(parent);
-  document.body.appendChild(father);
-
-  book_manager.pages.forEach((img) => {
-    console.log(img);
-    image_viewer.appendChild(img);
-    img.style.display = "none";
-  });
-  set_image(0, book_manager.pages);
-
-  return {
-    next_page: () => next_page(book_manager),
-    prev_page: () => prev_page(book_manager),
-    selected: () => selected,
-  };
-})();
-
-function highlight_book(parent) {
-  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.2)";
-  parent.style.zIndex = 100;
-}
-
-function unhighlight_book(parent) {
-  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.02)";
-  parent.style.zIndex = 0;
-}
-
-function make_big(elem) {
-  elem.style.transition = "height 0.1s";
-  elem.style.height = "95vh";
-}
-
-function make_small(elem, num) {
-  elem.style.transition = "height 0.1s";
-  elem.style.height = num + "vh";
-}
-
-let green_book = (function() {
-  // create parent element
-  let parent = document.createElement("div");
-  parent.id = "blue-book";
-  parent.classList.add("fixed-element");
-  parent.style.height = "80vh";
-
-  let book_manager = create_book("bigbook", 21);
-  let selected = false;
-
-  // image viewer
-  let image_viewer = document.createElement("div");
-  image_viewer.id = "image-viewer";
-
-  create_draggable(parent);
-  add_corners(parent);
-
-  parent.appendChild(image_viewer);
-
-  parent.onmouseenter = () => {
-    highlight_book(parent);
-    selected = true;
-  };
-  parent.onmouseleave = () => {
-    unhighlight_book(parent);
+    unhighlight_book(image_viewer);
     selected = false;
   };
 
@@ -115,40 +65,38 @@ let green_book = (function() {
   });
   set_image(0, book_manager.pages);
 
+  let is_rotated = () => ((dimensions.r / 180) % 2 === 0 ? true : false);
+
   return {
-    next_page: () => next_page(book_manager),
-    prev_page: () => prev_page(book_manager),
+    next_page: () =>
+      is_rotated() ? next_page(book_manager) : prev_page(book_manager),
+    prev_page: () =>
+      is_rotated() ? prev_page(book_manager) : next_page(book_manager),
     selected: () => selected,
   };
-})();
-
-function add_pages(folder, num_pages, pages) {
-  for (let i = 1; i <= num_pages; i++) {
-    pages.push(`./${folder}/${i}.png`);
-  }
-
-  pages = pages.map((img) => {
-    const image = new Image();
-    image.src = img;
-    image.draggable = false;
-    return image;
-  });
-
-  return pages;
 }
 
-function create_book(folder, num_pages) {
-  return {
-    pages: add_pages(folder, num_pages, []),
-    cur: 0,
-  };
+function highlight_book(parent) {
+  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.2)";
+  parent.parentElement.style.zIndex = 100;
 }
 
-function set_image(id, pages) {
-  pages.forEach((img) => {
-    img.style.display = "none";
-  });
-  pages[id].style.display = "block";
+function unhighlight_book(parent) {
+  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.02)";
+
+  parent.parentElement.style.zIndex = 0;
+}
+
+function make_big(elem) {
+  elem.style.transition = "height 0.1s";
+  elem.style.height = "100vh";
+  elem.style.transition = "transform 0.1s";
+  elem.style.transform = "translate(10px, 10px)";
+}
+
+function make_small(elem, num) {
+  elem.style.transition = "height 0.1s";
+  elem.style.height = num + "vh";
 }
 
 function next_page(book) {
@@ -168,7 +116,7 @@ function prev_page(book) {
   set_image(book.cur, book.pages);
 }
 
-function add_corners(elem) {
+function add_corners(elem, dimensions) {
   // add 10px divs to each corner of the element
   let corners = ["top-left", "top-right"];
   corners.forEach((corner) => {
@@ -186,8 +134,9 @@ function add_corners(elem) {
 
       corner_div.onclick = function(e) {
         e.stopPropagation();
-        if (elem.style.height === "95vh") make_small(elem, 60);
-        else make_big(elem);
+        elem.style.height !== dimensions.h + "vh"
+          ? make_small(elem, dimensions.h)
+          : make_big(elem);
       };
     }
 
@@ -197,19 +146,19 @@ function add_corners(elem) {
 
       corner_div.onclick = function(e) {
         e.stopPropagation();
-        rotation += 180;
-        update_rotation(elem, rotation);
+        dimensions.r += 180;
+
+        let els = elem.childNodes;
+        let el;
+
+        els.forEach((e) => {
+          if (e.id === "image-viewer") {
+            el = e;
+          }
+        });
+
+        update_rotation(el, dimensions.r);
       };
-    }
-
-    if (corner === "bottom-left") {
-      corner_div.style.bottom = "0px";
-      corner_div.style.left = "0px";
-    }
-
-    if (corner === "bottom-right") {
-      corner_div.style.bottom = "0px";
-      corner_div.style.right = "0px";
     }
 
     corner_div.style.cursor = "pointer";
@@ -233,9 +182,8 @@ function create_draggable(draggable_elem) {
     if (!isDragging) return;
     let x = e.clientX - offsetX;
     let y = e.clientY - offsetY;
-    r = rotation;
 
-    update_position(draggable_elem, x, y, r);
+    update_position(draggable_elem, x, y);
   });
 
   draggable_elem.addEventListener("pointerup", function() {
@@ -247,14 +195,43 @@ function create_draggable(draggable_elem) {
   });
 }
 
-function update_position(elem, x, y, r) {
+function update_position(elem, x, y) {
   elem.style.transition = "transform 0s";
-  elem.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg)`;
+  elem.style.transform = `translate(${x}px, ${y}px)`;
 }
 
 function update_rotation(elem, r) {
-  elem.style.transition = "transform 0.1s";
-  let existing_transform = elem.style.transform;
-  let transform = existing_transform.split(" rotate(")[0];
-  elem.style.transform = `${transform} rotate(${r}deg)`;
+  elem.style.transition = "transform 0.5s";
+  // let existing_transform = elem.style.transform;
+  // let transform = existing_transform.split(" rotate(")[0];
+  elem.style.transform = `rotate(${r}deg)`;
+}
+
+function add_pages(folder, num_pages, pages) {
+  for (let i = 1; i <= num_pages; i++) {
+    pages.push(`./${folder}/${i}.png`);
+  }
+
+  pages = pages.map((img) => {
+    const image = new Image();
+    image.src = img;
+    image.draggable = false;
+    return image;
+  });
+
+  return pages;
+}
+
+function create_manager(folder, num_pages) {
+  return {
+    pages: add_pages(folder, num_pages, []),
+    cur: 0,
+  };
+}
+
+function set_image(id, pages) {
+  pages.forEach((img) => {
+    img.style.display = "none";
+  });
+  pages[id].style.display = "block";
 }
