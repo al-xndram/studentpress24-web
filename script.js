@@ -28,7 +28,7 @@ let blue_book = (function() {
   image_viewer.id = "image-viewer";
 
   create_draggable(parent);
-  add_corners(father);
+  add_corners(parent);
 
   parent.appendChild(image_viewer);
 
