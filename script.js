@@ -1,4 +1,4 @@
-document.addEventListener("keydown", function(e) {
+document.addEventListener("keydown", function (e) {
   if (e.key === "ArrowRight") {
     if (blue_book.selected()) blue_book.next_page();
     if (green_book.selected()) green_book.next_page();
@@ -89,12 +89,12 @@ function create_book(dimensions, folder, num_pages) {
 
 function highlight_book(parent) {
   z += 1;
-  parent.style.boxShadow = "0 0 80px 10px rgba(0, 0, 0, 0.4)";
+  parent.style.boxShadow = "0 0 80px 10px rgba(150, 250, 100, 0.3)";
   parent.parentElement.style.zIndex = z;
 }
 
 function unhighlight_book(parent) {
-  parent.style.boxShadow = "0 0 50px 10px rgba(0, 0, 0, 0.2)";
+  parent.style.boxShadow = "0 0 50px 10px rgba(150, 250, 100, 0.1)";
 }
 
 function make_big(elem) {
@@ -161,7 +161,7 @@ function add_corners(elem, dimensions, seeker) {
       max.id = "max-btn";
       max.innerText = "⤡";
 
-      max.onclick = function(e) {
+      max.onclick = function (e) {
         e.stopPropagation();
         if (max.innerText === "⤡") {
           make_big(elem);
@@ -173,7 +173,7 @@ function add_corners(elem, dimensions, seeker) {
       let min = document.createElement("span");
       min.innerText = "↴";
 
-      min.onclick = function(e) {
+      min.onclick = function (e) {
         e.stopPropagation();
         let h = window.innerHeight;
 
@@ -207,7 +207,7 @@ function add_corners(elem, dimensions, seeker) {
       prev.innerText = "←";
       prev.onclick = seeker.prev;
 
-      rot_btn.onclick = function(e) {
+      rot_btn.onclick = function (e) {
         e.stopPropagation();
         dimensions.r += 180;
 
@@ -239,13 +239,13 @@ function create_draggable(draggable_elem) {
   let offsetX = 0;
   let offsetY = 0;
 
-  draggable_elem.addEventListener("pointerdown", function(e) {
+  draggable_elem.addEventListener("pointerdown", function (e) {
     isDragging = true;
     offsetX = e.clientX - draggable_elem.getBoundingClientRect().left;
     offsetY = e.clientY - draggable_elem.getBoundingClientRect().top;
   });
 
-  draggable_elem.addEventListener("pointermove", function(e) {
+  draggable_elem.addEventListener("pointermove", function (e) {
     if (!isDragging) return;
     let x = e.clientX - offsetX;
     let y = e.clientY - offsetY;
@@ -253,11 +253,11 @@ function create_draggable(draggable_elem) {
     update_position(draggable_elem, x, y);
   });
 
-  draggable_elem.addEventListener("pointerup", function() {
+  draggable_elem.addEventListener("pointerup", function () {
     isDragging = false;
   });
 
-  draggable_elem.addEventListener("onmouseleave", function() {
+  draggable_elem.addEventListener("onmouseleave", function () {
     isDragging = false;
   });
 }
