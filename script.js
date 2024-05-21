@@ -96,11 +96,23 @@ function make_big(elem) {
   elem.style.height = "100vh";
   elem.style.transition = "all 0.3s";
   elem.style.transform = "translate(10px, 10px)";
+
+  elem.childNodes.forEach((e) => {
+    e.childNodes.forEach((els) => {
+      if (els.id === "max-btn") els.innerText = "⤥";
+    });
+  });
 }
 
 function make_small(elem, num) {
   elem.style.transition = "height 0.3s";
   elem.style.height = num + "vh";
+
+  elem.childNodes.forEach((e) => {
+    e.childNodes.forEach((els) => {
+      if (els.id === "max-btn") els.innerText = "⤡";
+    });
+  });
 }
 
 function next_page(book) {
@@ -141,17 +153,15 @@ function add_corners(elem, dimensions) {
       corner_div.style.left = "0px";
 
       let max = document.createElement("span");
+      max.id = "max-btn";
       max.innerText = "⤡";
 
       max.onclick = function(e) {
         e.stopPropagation();
-
         if (max.innerText === "⤡") {
           make_big(elem);
-          max.innerText = "⤥";
         } else {
           make_small(elem, dimensions.h);
-          max.innerText = "⤡";
         }
       };
 
